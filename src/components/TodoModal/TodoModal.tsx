@@ -5,50 +5,33 @@ import { getUser } from '../../api';
 import { User } from '../../types/User';
 
 type Props = {
-   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-   selectTodo?: Todo;
- }
+  setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectTodo?: Todo;
+};
 
-
-
-
-export const TodoModal: React.FC<Props> = ({setModalIsOpen,selectTodo}) => {
-
+export const TodoModal: React.FC<Props> = ({ setModalIsOpen, selectTodo }) => {
   const [load, setLoad] = useState(true);
   const [user, setUser] = useState<User | null>(null);
 
-
-
-
   useEffect(() => {
+    if (!selectTodo) {
+      return;
+    }
 
+    getUser(selectTodo.userId).then(resp => {
+      setUser(resp);
 
+      if (selectTodo) {
+        setLoad(false);
+      }
+    });
+  }, [selectTodo]);
 
-      if (!selectTodo) return
-
-        getUser(selectTodo.userId)
-          .then((resp) => {
-            setUser(resp);
-
-            if (selectTodo) {
-
-              setLoad(false)
-            }
-
-
-
-          })
-
-
-  }, [selectTodo])
-
-
-
-  if (!selectTodo) return null;
-
+  if (!selectTodo) {
+    return null;
+  }
 
   return (
-
     <div className="modal is-active" data-cy="modal">
       <div className="modal-background" />
 
@@ -65,9 +48,12 @@ export const TodoModal: React.FC<Props> = ({setModalIsOpen,selectTodo}) => {
             </div>
 
             {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-              <button type="button" className="delete" data-cy="modal-close"
-                onClick={() => setModalIsOpen(false)}
-              />
+            <button
+              type="button"
+              className="delete"
+              data-cy="modal-close"
+              onClick={() => setModalIsOpen(false)}
+            />
           </header>
 
           <div className="modal-card-body">
@@ -76,22 +62,17 @@ export const TodoModal: React.FC<Props> = ({setModalIsOpen,selectTodo}) => {
             </p>
 
             <p className="block" data-cy="modal-user">
-                {/* <strong className="has-text-success">Done</strong> */}
+              {/* <strong className="has-text-success">Done</strong> */}
 
-
-                <strong className="has-text-danger">
-
-
-                 {selectTodo.completed ? ('Done') : ('Planned')}
-
-
-                </strong>
+              <strong className="has-text-danger">
+                {selectTodo.completed ? 'Done' : 'Planned'}
+              </strong>
 
               {' by '}
 
-               <a href={`mailto:${user?.email ?? ''}`}>
-  {user?.name ?? 'Пользователь'}
-</a>
+              <a href={`mailto:${user?.email ?? ''}`}>
+                {user?.name ?? 'Пользователь'}
+              </a>
             </p>
           </div>
         </div>
