@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 type SortFilter = {
   select: string;
   textSearch: string;
@@ -7,25 +5,22 @@ type SortFilter = {
 
 type Props = {
   setSortFilter: React.Dispatch<React.SetStateAction<SortFilter>>;
+  sortFilter: SortFilter;
 };
 
-export const TodoFilter: React.FC<Props> = ({ setSortFilter }) => {
-  const [textSearch, setTextSearch] = useState('');
-  const [select, setSelect] = useState('');
-
-  useEffect(() => {
-    setSortFilter({ select, textSearch });
-  }, [select, textSearch, setSortFilter]);
-
+export const TodoFilter: React.FC<Props> = ({ setSortFilter, sortFilter }) => {
   return (
     <form className="field has-addons">
       <p className="control">
         <span className="select">
           <select
             data-cy="statusSelect"
-            value={select}
+            value={sortFilter.select}
             onChange={e => {
-              setSelect(e.target.value);
+              setSortFilter(prev => ({
+                ...prev,
+                select: e.target.value,
+              }));
             }}
           >
             <option value="all">All</option>
@@ -41,16 +36,19 @@ export const TodoFilter: React.FC<Props> = ({ setSortFilter }) => {
           type="text"
           className="input"
           placeholder="Search..."
-          value={textSearch}
+          value={sortFilter.textSearch}
           onChange={e => {
-            setTextSearch(e.target.value);
+            setSortFilter(prev => ({
+              ...prev,
+              textSearch: e.target.value,
+            }));
           }}
         />
         <span className="icon is-left">
           <i className="fas fa-magnifying-glass" />
         </span>
 
-        {textSearch && (
+        {sortFilter.textSearch && (
           <span className="icon is-right" style={{ pointerEvents: 'all' }}>
             {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
             <button
@@ -58,7 +56,10 @@ export const TodoFilter: React.FC<Props> = ({ setSortFilter }) => {
               type="button"
               className="delete"
               onClick={() => {
-                setTextSearch('');
+                setSortFilter(prev => ({
+                  ...prev,
+                  textSearch: '',
+                }));
               }}
             />
           </span>

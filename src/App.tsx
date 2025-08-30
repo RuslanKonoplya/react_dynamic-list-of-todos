@@ -61,7 +61,10 @@ export const App: React.FC = () => {
             <h1 className="title">Todos:</h1>
 
             <div className="block">
-              <TodoFilter setSortFilter={setSortFilter} />
+              <TodoFilter
+                setSortFilter={setSortFilter}
+                sortFilter={sortFilter}
+              />
             </div>
 
             <div className="block">
