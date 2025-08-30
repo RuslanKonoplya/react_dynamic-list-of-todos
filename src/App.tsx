@@ -75,7 +75,8 @@ export const App: React.FC = () => {
                   todos={preparedTodos}
                   setModalIsOpen={setModalIsOpen}
                   setSelectTodo={setSelectTodo}
-                  modalIsOpen={modalIsOpen}
+                    modalIsOpen={modalIsOpen}
+                     selectTodo={selectTodo}
                 />
               )}
             </div>

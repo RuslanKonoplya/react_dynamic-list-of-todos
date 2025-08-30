@@ -9,6 +9,33 @@ type Props = {
 };
 
 export const TodoFilter: React.FC<Props> = ({ setSortFilter, sortFilter }) => {
+
+
+
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  setSortFilter(prev => ({
+    ...prev,
+    select: e.target.value,
+  }));
+  };
+
+  const handleTextSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setSortFilter(prev => ({
+    ...prev,
+    textSearch: e.target.value,
+  }));
+};
+
+
+  const handleClearTextSearch = () => {
+  setSortFilter(prev => ({
+    ...prev,
+    textSearch: '',
+  }));
+};
+
+
   return (
     <form className="field has-addons">
       <p className="control">
@@ -16,12 +43,7 @@ export const TodoFilter: React.FC<Props> = ({ setSortFilter, sortFilter }) => {
           <select
             data-cy="statusSelect"
             value={sortFilter.select}
-            onChange={e => {
-              setSortFilter(prev => ({
-                ...prev,
-                select: e.target.value,
-              }));
-            }}
+            onChange={handleSelectChange}
           >
             <option value="all">All</option>
             <option value="active">Active</option>
@@ -37,12 +59,7 @@ export const TodoFilter: React.FC<Props> = ({ setSortFilter, sortFilter }) => {
           className="input"
           placeholder="Search..."
           value={sortFilter.textSearch}
-          onChange={e => {
-            setSortFilter(prev => ({
-              ...prev,
-              textSearch: e.target.value,
-            }));
-          }}
+          onChange={handleTextSearchChange}
         />
         <span className="icon is-left">
           <i className="fas fa-magnifying-glass" />
@@ -55,12 +72,7 @@ export const TodoFilter: React.FC<Props> = ({ setSortFilter, sortFilter }) => {
               data-cy="clearSearchButton"
               type="button"
               className="delete"
-              onClick={() => {
-                setSortFilter(prev => ({
-                  ...prev,
-                  textSearch: '',
-                }));
-              }}
+              onClick={handleClearTextSearch}
             />
           </span>
         )}

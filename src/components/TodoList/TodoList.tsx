@@ -1,10 +1,12 @@
 import { Todo } from '../../types/Todo';
+import classNames from 'classnames';
 
 type Props = {
   todos: Todo[];
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectTodo: React.Dispatch<React.SetStateAction<Todo | undefined>>;
   modalIsOpen: boolean;
+   selectTodo?: Todo;
 };
 
 export const TodoList: React.FC<Props> = ({
@@ -12,7 +14,18 @@ export const TodoList: React.FC<Props> = ({
   setModalIsOpen,
   setSelectTodo,
   modalIsOpen,
+   selectTodo
 }) => {
+
+
+
+  const handleShowTodo = (todo : Todo) => {
+    setModalIsOpen(true);
+    setSelectTodo(todo);
+  }
+
+
+
   return (
     <table className="table is-narrow is-fullwidth">
       <thead>
@@ -29,49 +42,52 @@ export const TodoList: React.FC<Props> = ({
       </thead>
 
       <tbody>
-        {todos.map(todo => (
-          <tr data-cy="todo" className="" key={todo.id}>
-            <td className="is-vcentered">{todo.id}</td>
+       {todos.map(todo => (
+  <tr data-cy="todo" key={todo.id}>
 
-            {todo.completed ? (
-              <td className="is-vcentered">
-                <span className="icon" data-cy="iconCompleted">
-                  <i className="fas fa-check" />
-                </span>
-              </td>
-            ) : (
-              <td className="is-vcentered" />
-            )}
+    <td className="is-vcentered">{todo.id}</td>
 
-            <td className="is-vcentered is-expanded">
-              <p
-                className={
-                  todo.completed ? 'has-text-success' : 'has-text-danger'
-                }
-              >
-                {todo.title}
-              </p>
-            </td>
 
-            <td className="has-text-right is-vcentered">
-              <button
-                data-cy="selectButton"
-                className="button"
-                type="button"
-                onClick={() => {
-                  setModalIsOpen(true);
-                  setSelectTodo(todo);
-                }}
-              >
-                <span className="icon">
-                  <i
-                    className={modalIsOpen ? 'far fa-eye-slash' : 'far fa-eye'}
-                  />
-                </span>
-              </button>
-            </td>
-          </tr>
-        ))}
+    <td className="is-vcentered">
+      {todo.completed && (
+        <span className="icon" data-cy="iconCompleted">
+          <i className="fas fa-check" />
+        </span>
+      )}
+    </td>
+
+
+    <td className="is-vcentered is-expanded">
+      <p
+        className={classNames({
+          'has-text-success': todo.completed,
+          'has-text-danger': !todo.completed,
+        })}
+      >
+        {todo.title}
+      </p>
+    </td>
+
+
+    <td className="has-text-right is-vcentered">
+      <button
+        data-cy="selectButton"
+        className="button"
+        type="button"
+        onClick={() => handleShowTodo(todo)}
+      >
+        <span className="icon">
+          <i
+            className={classNames('far', {
+              'fa-eye-slash': modalIsOpen && selectTodo?.id === todo.id,
+              'fa-eye': !(modalIsOpen && selectTodo?.id === todo.id),
+            })}
+          />
+        </span>
+      </button>
+    </td>
+  </tr>
+))}
       </tbody>
     </table>
   );
